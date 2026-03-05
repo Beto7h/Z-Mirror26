@@ -3,7 +3,16 @@ from ...ext_utils.status_utils import (
     get_readable_file_size,
     get_readable_time,
 )
-from pkg_resources import get_distribution
+try:
+    from pkg_resources import get_distribution
+except ImportError:
+    import importlib.metadata as importlib_metadata
+    def get_distribution(package_name):
+        class Distribution:
+            def __init__(self, version):
+                self.version = version
+        return Distribution(importlib_metadata.version(package_name))
+
 
 
 class GoogleDriveStatus:
